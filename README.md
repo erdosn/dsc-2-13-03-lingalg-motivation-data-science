@@ -13,6 +13,473 @@ You will be able to:
 * Understand and state the importance of linear algebra in the fields of data science and machine learning
 * Describe the areas in AI and machine learning where Linear Algebra might be used for advanced analytics
 
+
+```python
+import pandas as pd
+import numpy as np
+```
+
+## Objectives
+YWBAT
+* Define linear algebra operations
+    * dot product, cross products (potentially)
+    * dot product - the sum of element wise multiplication of vectors
+    * dot in python - 
+        * vectors - dot product
+        * matrices - matrix multiplication
+* Define terms
+    * identity matrix
+        * diagonal matrix of 1s and 0s
+    * left multiplication, right multiplication
+        * that's a thing now
+    * orthogonal
+        * angle between vectors is 90 degrees
+* Perform linear algebra operations in python using numpy
+* How does LinAlg relate to Data Science?
+
+### How does linear algebra relate to what we've been doing so far?
+* linear regression can only be done comparing 2 things...
+    * ex: compare sqft_living to price
+    * ex: compare sqft_living, bedrooms to price
+    * But how does this use linear algebra
+        * 
+* y = mx + b (algebra)
+* y = m_x_ + b (linear algebra)
+
+### What is linear algebra? Field of Mathematics
+Contains elements
+* scalars - numbers
+* vectors - list of numbers of dimension n x 1
+* matrices - 
+    * list of numbers but multidimensional m x n
+    * collection of vectors
+    * define some space
+
+
+### Where have we seen matrices?
+* Dataframe is literally a matrix (pandas)
+
+
+```python
+# compare and contrast vectors and matrices in python
+# how do we create a vector/identify a vector?
+
+# is v a vector
+v = np.array([1, 2, 3, 4])
+vv = np.matrix(v)
+print(v) # this is a vector
+print(vv) # it is a matrix
+```
+
+    [1 2 3 4]
+    [[1 2 3 4]]
+
+
+
+```python
+v.shape, vv.shape
+```
+
+
+
+
+    ((4,), (1, 4))
+
+
+
+
+```python
+x = np.array([3, 17])
+y = np.array([31, 5])
+```
+
+
+```python
+# actual dot product (Linear algebra)
+# x dot y = 
+3*31 + 17*5
+```
+
+
+
+
+    178
+
+
+
+### Properties of Linear Algebra Dot Product
+* Always returns a scalar (single number)
+* non uniqueness (important later)
+* communative/commutative /flippable
+
+### Testing python's/numpy's .dot method
+
+
+```python
+np.dot(x, y) # acts like a normal dot product
+```
+
+
+
+
+    178
+
+
+
+
+```python
+x.dot(y) # acts like a normal dot product
+```
+
+
+
+
+    178
+
+
+
+
+```python
+np.dot(y, x) # acts like a normal dot product
+```
+
+
+
+
+    178
+
+
+
+### Not really 'math' but still doing math stuff in python
+
+
+```python
+x = np.matrix([3, 17])
+y = np.matrix([31, 5])
+print(y, x)
+print(x.shape, y.shape)
+```
+
+    [[31  5]] [[ 3 17]]
+    (1, 2) (1, 2)
+
+
+
+```python
+# this fails because of matrix multiplication rules
+# inner dimensions don't match
+
+print(np.dot(x, y)) # <- broken because inner dimensions don't match
+```
+
+
+    -------------------------------------------------------------
+
+    ValueError                  Traceback (most recent call last)
+
+    <ipython-input-17-b31be6eedbe4> in <module>()
+          2 # inner dimensions don't match
+          3 
+    ----> 4 print(np.dot(x, y)) # <- broken because inner dimensions don't match
+    
+
+    ValueError: shapes (1,2) and (1,2) not aligned: 2 (dim 1) != 1 (dim 0)
+
+
+
+```python
+# let's 'flip' y and make it a 2x1
+print(y.T, y.T.shape)
+```
+
+    [[31]
+     [ 5]] (2, 1)
+
+
+
+```python
+# returns a matrix (singleton)
+print(x.shape, y.T.shape)
+np.dot(x, y.T) # returns a 1x1 matrix
+```
+
+    (1, 2) (2, 1)
+
+
+
+
+
+    matrix([[178]])
+
+
+
+
+```python
+x.dot(y.T) 
+```
+
+
+
+
+    matrix([[178]])
+
+
+
+
+```python
+# what happened here?
+y.T.dot(x) # return a matrix with dimensions = outer dimensions (2x2)
+```
+
+
+
+
+    matrix([[ 93, 527],
+            [ 15,  85]])
+
+
+
+
+```python
+# let's look into it
+```
+
+
+```python
+print(y.T.shape, x.shape) 
+```
+
+    (2, 1) (1, 2)
+
+
+
+```python
+x*y.T # dot on matrices is same as multiplication
+```
+
+
+
+
+    matrix([[178]])
+
+
+
+
+```python
+y.T*x # dot on matrices is same as multiplication
+```
+
+
+
+
+    matrix([[ 93, 527],
+            [ 15,  85]])
+
+
+
+
+```python
+print(y.T, x)
+```
+
+    [[31]
+     [ 5]] [[ 3 17]]
+
+
+
+```python
+# interesting properties of dot products
+# 2 vectors (v1, v2) are orthogonal iff the angle between v1 and v2 is perpendicular (90 degrees, pi/2 radians)
+```
+
+
+```python
+v1 = np.array([1, 0])
+v2 = np.array([0, 1])
+```
+
+
+```python
+v1.dot(v2)
+```
+
+
+
+
+    0
+
+
+
+
+```python
+v2.dot(v1)
+```
+
+
+
+
+    0
+
+
+
+
+```python
+v1 = np.array([1, 1])
+v2 = np.array([-1, 1])
+v1.dot(v2)
+```
+
+
+
+
+    0
+
+
+
+
+```python
+# if 2 vectors are orthogonal their dot product is 0
+# if dot product is 0 for 2 vectors then they are orthogonal
+```
+
+### Identity element - what does this do?
+* additive identity, in arithmetic, is 0
+    * a + 0 = a
+* multiplicative identity, in arithmetic, is 1
+    * a * 1 = a
+* additive inverse of a number a, in arithmetic, is -a
+    * a + (-a) = 0, adding returns the additive identity
+    * Does every number have an additive inverse? yes, kind of, zero is it's own inverse (additive)
+* multiplicative inverse of a number a, in arithmetic, is 1/a
+    * a * (1/a) = 1, multiplying returns the multiplicative identity
+    * Does every number have a mult. inverse? No!!!! Because 1/0 does not exist and 1 is its own inverse
+
+
+
+### Identity elements in Linear Algebra
+* Additive identity in LinAlg is a zero matrix of a distinct shape
+    * A + [0] = A
+* Multiplicative identity in LinAlg is a 1 matrix (identity matrix) and it's diagonal of shape nxn
+    * AxI = A
+* Additive inverse of A is -A
+* Multiplicative inverse of A is A_inv 
+    * A x A_inv = I
+    * A has to have a square shape
+    * ex: A is 2x3 2x3 * 2x3 -> impossible
+        * What do we do?
+        * left inverse and a right inverse
+        * left inverse
+            * (3x2) x (2x3)
+            * A_inv_left * A = I (3x3)
+        * right inverse
+            * (2x3) x (3x2)
+            * A     x A_inv_right = I (2x2)
+
+
+```python
+print(y, -y)
+```
+
+    [[31  5]] [[-31  -5]]
+
+
+
+```python
+# how to make the additive identity in python
+np.zeros((2, 3))
+```
+
+
+
+
+    array([[0., 0., 0.],
+           [0., 0., 0.]])
+
+
+
+
+```python
+# how to make the identity matrix in python
+np.ones((2, 3))
+```
+
+
+
+
+    array([[1., 1., 1.],
+           [1., 1., 1.]])
+
+
+
+
+```python
+np.identity(4)
+```
+
+
+
+
+    array([[1., 0., 0., 0.],
+           [0., 1., 0., 0.],
+           [0., 0., 1., 0.],
+           [0., 0., 0., 1.]])
+
+
+
+
+```python
+A = np.array([[1, 2],[3, 4]])
+A
+```
+
+
+
+
+    array([[1, 2],
+           [3, 4]])
+
+
+
+
+```python
+A_inv = np.linalg.inv(A)
+A_inv
+```
+
+
+
+
+    array([[-2. ,  1. ],
+           [ 1.5, -0.5]])
+
+
+
+
+```python
+A.dot(A_inv)
+```
+
+
+
+
+    array([[1.00000000e+00, 1.11022302e-16],
+           [0.00000000e+00, 1.00000000e+00]])
+
+
+
+
+```python
+A*A_inv
+```
+
+
+
+
+    array([[-2. ,  2. ],
+           [ 4.5, -2. ]])
+
+
+
 ## Background 
 
 Linear Algebra is a continuous form of mathematics and is applied throughout science and engineering because it allows you to model natural phenomena and to compute them efficiently. Because it is a form of continuous and not discrete mathematics, a lot of computer scientists don’t have a lot of experience with it. Linear Algebra is also central to almost all areas of mathematics like geometry and functional analysis. Its concepts are a crucial prerequisite for understanding the theory behind Data Science. You don’t need to understand Linear Algebra before getting started in Data Science, but at some point, you may want to gain a better understanding of how the different Machine Learning algorithms really work under the hood. So if you really want to be a professional in this field, you will have to master the parts of Linear Algebra that are important for Machine Learning.
